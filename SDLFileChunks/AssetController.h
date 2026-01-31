@@ -4,6 +4,8 @@
 #include "StandartIncludes.h"
 #include "Asset.h"
 #include "StackAllocator.h"
+#include "Singleton.h"
+class Asset;
 
 class AssetController : public Singleton<AssetController>
 {
@@ -21,7 +23,7 @@ public:
 
 private:
 	//Members
-	map<string, Asset*> m_assets;
+	map<string , Asset*> m_assets;
 };
 
 #endif // !ASSET_CONTROLLER_H

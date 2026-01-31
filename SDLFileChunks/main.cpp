@@ -1,9 +1,18 @@
 #include "Level.h"
-
+#include "FileChunk.h"
+#include "CommandMannager.h"
+#include "AssembleChunksCommand.h"
 int main()
 {
+    if (FileChunk::Pool == nullptr)
+        FileChunk::Pool = new ObjectPool<FileChunk>(); 
     Level* level = new Level();
     level->AssignNonDefaultValues();
+
+    CommandMannager mgr;
+    mgr.Do(new AssembleChunksCommand(level, "Rebuilt.tga")); 
+    mgr.Undo();                                             
+    mgr.Redo();
 
     ofstream writeStream("level.bin", ios::out | ios::binary);
     level->Serialize(writeStream);

@@ -2,7 +2,7 @@
 #define OBJECTPOOL_H
 
 #include "StandartIncludes.h"
-
+#include "FileChunk.h"
 template<class T>
 class ObjectPool
 {

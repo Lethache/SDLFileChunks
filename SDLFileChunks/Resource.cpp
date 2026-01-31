@@ -1,4 +1,7 @@
 #include "Resource.h"
+#include "Asset.h"
+#include "AssetController.h"
+#include "ObjectPool.h"
 typedef unsigned char Byte1;
 
 

@@ -1,4 +1,5 @@
 #include "SoundEffect.h"
+#include "AssetController.h"
 
 ObjectPool<SoundEffect>* SoundEffect::Pool = nullptr;
 

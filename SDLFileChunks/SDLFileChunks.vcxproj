@@ -127,8 +127,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AssembleChunksCommand.cpp" />
     <ClCompile Include="Asset.cpp" />
     <ClCompile Include="AssetController.cpp" />
+    <ClCompile Include="FileChunk.cpp" />
     <ClCompile Include="FileController.cpp" />
     <ClCompile Include="Level.cpp" />
     <ClCompile Include="main.cpp" />
@@ -138,8 +140,12 @@
     <ClCompile Include="Unit.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AssembleChunksCommand.h" />
     <ClInclude Include="Asset.h" />
     <ClInclude Include="AssetController.h" />
+    <ClInclude Include="Command.h" />
+    <ClInclude Include="CommandMannager.h" />
+    <ClInclude Include="FileChunk.h" />
     <ClInclude Include="FileController.h" />
     <ClInclude Include="Level.h" />
     <ClInclude Include="ObjectPool.h" />

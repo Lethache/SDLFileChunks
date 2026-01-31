@@ -2,8 +2,11 @@
 #define RESOURCE_H
 
 #include "Serializable.h"
-#include"AssetController.h"
+
 typedef unsigned char Byte1;
+class AssetController;
+class Asset;
+template<class T > class ObjectPool;
 class Resource : public Serializable
 {
 public:
