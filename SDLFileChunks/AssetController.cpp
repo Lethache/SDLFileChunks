@@ -2,66 +2,85 @@
 #include "FileController.h"
 #include "Asset.h"
 #include "ObjectPool.h"
+#include <iostream>
+
 StackAllocator* AssetController::Stack = nullptr;
 
-AssetController::AssetController()
-{
-}
-
+AssetController::AssetController() {}
 AssetController::~AssetController()
 {
     Clear();
 }
 
+void AssetController::Initialize(int stackSize)
+{
+    if (Stack == nullptr)
+        Stack = new StackAllocator();
 
+    Stack->AllocateStack(stackSize);
 
+    if (Asset::Pool == nullptr)
+        Asset::Pool = new ObjectPool<Asset>();
+}
 
+void AssetController::ResetStack()
+{
+    if (Stack != nullptr)
+        Stack->ClearMemory(); 
+}
+
+void AssetController::DeleteAsset(const std::string& guid)
+{
+    auto it = m_assets.find(guid);
+    if (it == m_assets.end()) return;
+
+    std::cout << "Deleting asset " << guid << std::endl;
+
+    if (Asset::Pool != nullptr && it->second != nullptr)
+        Asset::Pool->ReleaseResource(it->second);
+
+    m_assets.erase(it);
+}
 
 void AssetController::Clear()
 {
-    // Remove all asset objects from the object pool
-    for (auto const& x : m_assets)
-    {
-        Asset::Pool->ReleaseResource(x.second);
-    }
     if (Asset::Pool != nullptr)
     {
-        delete Asset::Pool;
-        Asset::Pool = nullptr;
+        for (auto const& x : m_assets)
+            Asset::Pool->ReleaseResource(x.second);
     }
 
-    Stack->ClearMemory();
     m_assets.clear();
+
+    
+    ResetStack();
+
 }
 
-
-void AssetController::Initialize(int _stackSize)
+Asset* AssetController::GetAsset(std::string guid)
 {
-    Stack = new StackAllocator();
-    AssetController::Stack->AllocateStack(_stackSize);
-    Asset::Pool = new ObjectPool<Asset>();
-}
+    auto it = m_assets.find(guid);
+    if (it != m_assets.end())
+        return it->second;
 
+   
+    if (Asset::Pool == nullptr)
+        Asset::Pool = new ObjectPool<Asset>();
 
-Asset* AssetController::GetAsset(string _guid)
-{
-    // If asset has already been loaded, return loaded asset
-    if (m_assets.count(_guid) != 0)
-    {
-        return m_assets[_guid];
-    }
-
-    // Otherwise, load the asset and return it
     Asset* asset = Asset::Pool->GetResource();
 
-    asset->SetGUID(_guid);
+    std::cout << "Allocating asset " << guid << std::endl;
 
-    asset->SetDataSize(FileController::Instance().GetFileSize(_guid));
-    asset->SetData(Stack->GetMemory(asset->GetDataSize()));
-    FileController::Instance().ReadFile(_guid, asset->GetData(), asset->GetDataSize());
+    asset->SetGUID(guid);
 
-    // Add new asset to the map
-    m_assets[_guid] = asset;
+    auto size = FileController::Instance().GetFileSize(guid);
+    asset->SetDataSize(size);
 
+    unsigned char* mem = Stack->GetMemory(size);  
+    asset->SetData(mem);
+
+    FileController::Instance().ReadFile(guid, asset->GetData(), asset->GetDataSize());
+
+    m_assets[guid] = asset;
     return asset;
 }

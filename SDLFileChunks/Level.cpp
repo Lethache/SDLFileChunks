@@ -1,113 +1,118 @@
 #include "Level.h"
 #include "FileChunk.h"
 #include "AssetController.h"
+
+
 Level::Level()
 {
-	AssetController::Instance().Initialize(1024* 1024 * 64); //allocate 64mb 
-	Unit::Pool = new ObjectPool<Unit>();
-	SoundEffect::Pool = new ObjectPool<SoundEffect>();
-	FileChunk::Pool = new ObjectPool<FileChunk>();
-	m_mapSizeX = 0;
-	m_mapSizeY = 0;
-	m_gameTime = 0.0f;
-	m_units.clear();
+	
+		AssetController::Instance().Initialize(1024 * 1024 * 64);
+
+		if (Unit::Pool == nullptr)       Unit::Pool = new ObjectPool<Unit>();
+		if (SoundEffect::Pool == nullptr) SoundEffect::Pool = new ObjectPool<SoundEffect>();
+		if (FileChunk::Pool == nullptr)  FileChunk::Pool = new ObjectPool<FileChunk>();
+
+		m_mapSizeX = 0;
+		m_mapSizeY = 0;
+		m_gameTime = 0.0f;
+
+		m_units.clear();
+		m_fileChunks.clear();
+	
+
 
 }
 
 Level::~Level()
 {
-	m_units.clear();
-	delete SoundEffect::Pool;
-	delete Unit::Pool;
-	AssetController::Instance().Clear(); // free 10mb 
-
+	
 	for (auto* fc : m_fileChunks)
-		FileChunk::Pool->ReleaseResource(fc);
-		m_fileChunks.clear();
-		
-		delete FileChunk::Pool;
+	{
+		if (fc != nullptr)
+			FileChunk::Pool->ReleaseResource(fc);
+	}
+	m_fileChunks.clear();
+	
+	delete FileChunk::Pool;
+	FileChunk::Pool = nullptr;
+	AssetController::Instance().Clear();
+
+	
+	delete SoundEffect::Pool;
+	SoundEffect::Pool = nullptr;
+
+	delete Unit::Pool;
+	Unit::Pool = nullptr;
+
+	m_units.clear();
 }
 
 void Level::AssignNonDefaultValues() {
 	m_mapSizeX = 128;
 	m_mapSizeY = 256;
 	m_gameTime = 101.5f;
-	for (int count = 0; count < 5; count++)
+
+	
+	for (auto* fc : m_fileChunks)
+		FileChunk::Pool->ReleaseResource(fc);
+	m_fileChunks.clear();
+	for (int i = 0; i < 7; i++)
 	{
-		Unit* unit = Unit::Pool->GetResource();
-		unit->AssignNonDefaultValues();
-		m_units.push_back(unit);
+		std::string name = "chunk" + std::to_string(i) + ".bin";
+		FileChunk* fc = FileChunk::Pool->GetResource();
+		fc->SetChunk(AssetController::Instance().GetAsset(name)); 
+		m_fileChunks.push_back(fc);
 	}
+	m_units.clear();
+}
+
+void Level::Serialize(std::ostream& out)
+{
+	out.write(reinterpret_cast<char*>(&m_mapSizeX), sizeof(m_mapSizeX));
+	out.write(reinterpret_cast<char*>(&m_mapSizeY), sizeof(m_mapSizeY));
+	out.write(reinterpret_cast<char*>(&m_gameTime), sizeof(m_gameTime));
+
+	int chunkCount = (int)m_fileChunks.size();
+	out.write(reinterpret_cast<char*>(&chunkCount), sizeof(chunkCount));
+
+	
+	for (int i = 0; i < chunkCount; i++)
+	{
+		std::string guid = m_fileChunks[i]->GetChunk()->GetGUID(); 
+		int len = (int)guid.size();
+		out.write(reinterpret_cast<char*>(&len), sizeof(len));
+		out.write(guid.c_str(), len);
+	}
+}
+
+void Level::Deserialize(std::istream& in)
+{
+	in.read(reinterpret_cast<char*>(&m_mapSizeX), sizeof(m_mapSizeX));
+	in.read(reinterpret_cast<char*>(&m_mapSizeY), sizeof(m_mapSizeY));
+	in.read(reinterpret_cast<char*>(&m_gameTime), sizeof(m_gameTime));
+
+	
 	for (auto* fc : m_fileChunks)
 		FileChunk::Pool->ReleaseResource(fc);
 	m_fileChunks.clear();
 
-	for (int i = 0; i < 7; i++)
-	{
-		FileChunk* fc = FileChunk::Pool->GetResource();
-
-		std::string filename = "chunk" + std::to_string(i) + ".bin";
-
-		Asset* a = AssetController::Instance().GetAsset(filename);
-
-		fc->SetChunk(a);
-		m_fileChunks.push_back(fc);
-	}
-}
-
-void Level::Serialize(std::ostream& _stream)
-{
-	_stream.write(reinterpret_cast<char*>(&m_mapSizeX), sizeof(m_mapSizeX));
-	_stream.write(reinterpret_cast<char*>(&m_mapSizeY), sizeof(m_mapSizeY));
-	_stream.write(reinterpret_cast<char*>(&m_gameTime), sizeof(m_gameTime));
-
-	int numberOfUnits = m_units.size();
-	_stream.write(reinterpret_cast<char*>(&numberOfUnits), sizeof(numberOfUnits));
-	for (int count = 0; count < numberOfUnits; count++)
-	{
-		SerializePointer(_stream, m_units[count]);
-	}
-
-	int chunkCount = (int)m_fileChunks.size();
-	_stream.write(reinterpret_cast<char*>(&chunkCount), sizeof(chunkCount));
-	for (int i = 0; i < chunkCount; i++)
-	{
-		SerializeAsset(_stream, m_fileChunks[i]->GetChunk());
-
-	}
-
-
-	Resource::Serialize(_stream);
-}
-
-void Level::Deserialize(std::istream& _stream)
-{
-	_stream.read(reinterpret_cast<char*>(&m_mapSizeX), sizeof(m_mapSizeX));
-	_stream.read(reinterpret_cast<char*>(&m_mapSizeY), sizeof(m_mapSizeY));
-	_stream.read(reinterpret_cast<char*>(&m_gameTime), sizeof(m_gameTime));
-	int numberOfUnits;
-	_stream.read(reinterpret_cast<char*>(&numberOfUnits), sizeof(numberOfUnits));
-
-	for (int count = 0; count < numberOfUnits; count++)
-	{
-		Unit* unit;
-		DeserializePointer(_stream, unit);
-		m_units.push_back(unit);
-	}
 	int chunkCount = 0;
-	_stream.read(reinterpret_cast<char*>(&chunkCount), sizeof(chunkCount));
+	in.read(reinterpret_cast<char*>(&chunkCount), sizeof(chunkCount));
 
 	for (int i = 0; i < chunkCount; i++)
 	{
+		int len = 0;
+		in.read(reinterpret_cast<char*>(&len), sizeof(len));
+
+		std::string guid(len, '\0');
+		in.read(&guid[0], len);
+
 		FileChunk* fc = FileChunk::Pool->GetResource();
-
-		Asset* a = nullptr;
-		DeserializeAsset(_stream, a);
-
-		fc->SetChunk(a);
+		fc->SetChunk(AssetController::Instance().GetAsset(guid)); 
 		m_fileChunks.push_back(fc);
 	}
 }
+
 
 void Level::ToString()
 {
@@ -127,4 +132,19 @@ void Level::ToString()
 		cout << i << ") " << m_fileChunks[i]->GetChunk()->GetGUID()
 			<< " size= " << m_fileChunks[i]->GetChunk()->GetDataSize() << endl;
 	}
+}
+void Level::ClearFileChunksAndAssets()
+{
+	for (auto* fc : m_fileChunks)
+	{
+		if (fc && fc->GetChunk())
+		{
+			AssetController::Instance().DeleteAsset(fc->GetChunk()->GetGUID());
+		}
+
+		if (fc)
+			FileChunk::Pool->ReleaseResource(fc);
+	}
+
+	m_fileChunks.clear();
 }

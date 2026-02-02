@@ -1,29 +1,28 @@
-#ifndef ASSET_CONTROLLER_H
-#define ASSET_CONTROLLER_H
+#pragma once
 
-#include "StandartIncludes.h"
-#include "Asset.h"
+#include <map>
+#include <string>
+
 #include "StackAllocator.h"
 #include "Singleton.h"
+
 class Asset;
 
 class AssetController : public Singleton<AssetController>
 {
 public:
-	//Constructors/Destructors
-	AssetController();
-	virtual ~AssetController();
-	//Methods
-	void Initialize(int _stackSize);
-	void Clear();
-	Asset* GetAsset(string _guid);
+    AssetController();
+    virtual ~AssetController();
 
-	//Members 
-	static StackAllocator* Stack;
+    void Initialize(int stackSize);
+    void Clear();
+
+    void ResetStack();                 
+    void DeleteAsset(const std::string& guid);
+    Asset* GetAsset(std::string guid);
+
+    static StackAllocator* Stack;
 
 private:
-	//Members
-	map<string , Asset*> m_assets;
+    std::map<std::string, Asset*> m_assets;
 };
-
-#endif // !ASSET_CONTROLLER_H

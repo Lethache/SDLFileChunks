@@ -48,6 +48,18 @@
     <ClCompile Include="AssembleChunksCommand.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="CommandManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ImageBufferState.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ImageBufferUtils.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ImageBufferCommands.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Asset.h">
@@ -95,7 +107,16 @@
     <ClInclude Include="AssembleChunksCommand.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="CommandMannager.h">
+    <ClInclude Include="CommandManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ImageBufferState.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ImageBufferUtils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ImageBufferCommands.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

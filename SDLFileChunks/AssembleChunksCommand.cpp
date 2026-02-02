@@ -1,6 +1,6 @@
 #include "AssembleChunksCommand.h"
 #include <fstream>
-#include <cstdio> // remove 
+#include <cstdio> 
 #include <iostream>
 
 AssembleChunksCommand::AssembleChunksCommand(Level* level, const std::string& outFile)

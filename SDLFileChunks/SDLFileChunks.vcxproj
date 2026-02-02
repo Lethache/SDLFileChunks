@@ -130,8 +130,12 @@
     <ClCompile Include="AssembleChunksCommand.cpp" />
     <ClCompile Include="Asset.cpp" />
     <ClCompile Include="AssetController.cpp" />
+    <ClCompile Include="CommandManager.cpp" />
     <ClCompile Include="FileChunk.cpp" />
     <ClCompile Include="FileController.cpp" />
+    <ClCompile Include="ImageBufferCommands.cpp" />
+    <ClCompile Include="ImageBufferState.cpp" />
+    <ClCompile Include="ImageBufferUtils.cpp" />
     <ClCompile Include="Level.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Resource.cpp" />
@@ -144,9 +148,12 @@
     <ClInclude Include="Asset.h" />
     <ClInclude Include="AssetController.h" />
     <ClInclude Include="Command.h" />
-    <ClInclude Include="CommandMannager.h" />
+    <ClInclude Include="CommandManager.h" />
     <ClInclude Include="FileChunk.h" />
     <ClInclude Include="FileController.h" />
+    <ClInclude Include="ImageBufferCommands.h" />
+    <ClInclude Include="ImageBufferState.h" />
+    <ClInclude Include="ImageBufferUtils.h" />
     <ClInclude Include="Level.h" />
     <ClInclude Include="ObjectPool.h" />
     <ClInclude Include="Resource.h" />

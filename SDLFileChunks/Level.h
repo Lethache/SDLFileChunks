@@ -21,7 +21,8 @@ public:
 	void Deserialize(std::istream& _stream) override;
 	void ToString() override;
 	void AssignNonDefaultValues() override;
-	
+	void ClearFileChunksAndAssets();
+
 	std::vector<FileChunk*>& GetFileChunks() { return m_fileChunks; }
 
 	//getters

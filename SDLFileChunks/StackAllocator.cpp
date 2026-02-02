@@ -1,34 +1,36 @@
+
 #include "StackAllocator.h"
-#include "StandartIncludes.h"
+#include <cstring>
 
 StackAllocator::StackAllocator()
+    : m_marker(nullptr), m_stackStart(nullptr), m_stackPosition(nullptr), m_stackEnd(nullptr)
 {
-    m_stackStart = nullptr; // When we start, we set it to nullptr to clear garbage address
-    ClearMemory();
 }
 
 StackAllocator::~StackAllocator()
 {
-    ClearMemory();
+    delete[] m_stackStart;
+    m_marker = m_stackStart = m_stackPosition = m_stackEnd = nullptr;
 }
 
-void StackAllocator::AllocateStack(unsigned int _stackSizeBytes)
+void StackAllocator::AllocateStack(unsigned int stackSizeBytes)
 {
-    m_stackStart = new unsigned char[_stackSizeBytes];
-    memset(m_stackStart, 0, _stackSizeBytes);
+    delete[] m_stackStart;
+
+    m_stackStart = new unsigned char[stackSizeBytes];
     m_stackPosition = m_stackStart;
-    m_stackEnd = m_stackStart + _stackSizeBytes;
+    m_marker = m_stackStart;
+    m_stackEnd = m_stackStart + stackSizeBytes;
 }
 
-unsigned  char* StackAllocator::GetMemory(unsigned int _sizeBytes)
+unsigned char* StackAllocator::GetMemory(unsigned int sizeBytes)
 {
-    unsigned char* hold = m_stackPosition;
-    if (m_stackPosition + _sizeBytes <= m_stackEnd)
-    {
-        m_stackPosition += _sizeBytes;
-        return hold;
-    }
-    return nullptr; // Not enough bytes left on stack
+    if (m_stackPosition + sizeBytes > m_stackEnd)
+        return nullptr;
+
+    unsigned char* mem = m_stackPosition;
+    m_stackPosition += sizeBytes;
+    return mem;
 }
 
 void StackAllocator::Mark()
@@ -39,17 +41,15 @@ void StackAllocator::Mark()
 void StackAllocator::FreeToMarker()
 {
     m_stackPosition = m_marker;
-    *m_stackPosition = 0;
 }
 
 void StackAllocator::ClearMemory()
 {
-    if (m_stackStart != nullptr)
-    {
-        delete m_stackStart;
-    }
-    m_marker = nullptr;
-    m_stackStart = nullptr;
-    m_stackEnd = nullptr;
-    m_stackPosition = nullptr;
+    m_stackPosition = m_stackStart;
+    m_marker = m_stackStart;
+}
+void StackAllocator::Reset()
+{
+    m_stackPosition = m_stackStart;
+    m_marker = m_stackStart;
 }

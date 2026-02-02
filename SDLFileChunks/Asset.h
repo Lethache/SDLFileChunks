@@ -14,11 +14,15 @@ public:
 	//Accessors
 	string GetGUID() { return m_GUID; }
 	void SetGUID(string _guid) { m_GUID = _guid; }
-	int GetDataSize() { return m_dataSize; }
 	void SetDataSize(int _size) { m_dataSize = _size; }
-	Byte1* GetData() { return m_data; }
 	void SetData(Byte1* _data) { m_data = _data; }
 
+	int GetDataSize() const { return m_dataSize; }
+
+	Byte1* GetData() { return m_data; }
+	const Byte1* GetData() const { return m_data; }
+    
+    const std::string& GetGUID() const { return m_GUID; }
 	//Methods 
 	void Reset();
 	void ToString();

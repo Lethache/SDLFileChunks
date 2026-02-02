@@ -15,10 +15,12 @@ public:
     // Methods
     void AllocateStack(unsigned int _stackSizeBytes);
     unsigned char* GetMemory(unsigned int _sizeBytes);
+    void ClearMemory();
     void Mark();
     void FreeToMarker();
-    void ClearMemory();
+    
 
+    void Reset();
 private:
     // Members
     unsigned char* m_marker;
