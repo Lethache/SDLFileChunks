@@ -3,5 +3,5 @@
     <Platform Name="x64" />
     <Platform Name="x86" />
   </Configurations>
-  <Project Path="SDLFileChunks/SDLFileChunks.vcxproj" />
+  <Project Path="SDLFileChunks/SDLFileChunks.vcxproj" Id="8b21d15c-82ab-4526-b720-5df7728b605b" />
 </Solution>
