@@ -105,11 +105,18 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
+      <AdditionalIncludeDirectories>$(SolutionDir)External\SDL3-3.4.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>$(SolutionDir)External\SDL3-3.4.0\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>SDL3.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>copy /Y "$(SolutionDir)External\SDL3-3.4.0\lib\x64\SDL3.dll" "$(TargetDir)"
+</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -133,11 +140,13 @@
     <ClCompile Include="CommandManager.cpp" />
     <ClCompile Include="FileChunk.cpp" />
     <ClCompile Include="FileController.cpp" />
+    <ClCompile Include="GameController.cpp" />
     <ClCompile Include="ImageBufferCommands.cpp" />
     <ClCompile Include="ImageBufferState.cpp" />
     <ClCompile Include="ImageBufferUtils.cpp" />
     <ClCompile Include="Level.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="Resource.cpp" />
     <ClCompile Include="SoundEffect.cpp" />
     <ClCompile Include="StackAllocator.cpp" />
@@ -151,11 +160,13 @@
     <ClInclude Include="CommandManager.h" />
     <ClInclude Include="FileChunk.h" />
     <ClInclude Include="FileController.h" />
+    <ClInclude Include="GameController.h" />
     <ClInclude Include="ImageBufferCommands.h" />
     <ClInclude Include="ImageBufferState.h" />
     <ClInclude Include="ImageBufferUtils.h" />
     <ClInclude Include="Level.h" />
     <ClInclude Include="ObjectPool.h" />
+    <ClInclude Include="Renderer.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="Serializable.h" />
     <ClInclude Include="Singleton.h" />
