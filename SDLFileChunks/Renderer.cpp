@@ -44,3 +44,27 @@ void Renderer::ClearScreen()
 {
     SDL_RenderClear(m_renderer);
 }
+
+void Renderer::RenderPoint(SDL_FPoint _position)
+{
+    SDL_RenderPoint(m_renderer, _position.x, _position.y);
+}
+
+void Renderer::RenderLine(SDL_FRect _points)
+{
+    SDL_RenderLine(m_renderer, _points.x, _points.y, _points.x + _points.w, _points.y + _points.h);
+}
+
+void Renderer::RenderRectangle(SDL_FRect _rect)
+{
+    SDL_RenderRect(m_renderer, &_rect);
+}
+
+void Renderer::RenderFillRectangle(SDL_FRect _rect)
+{
+    SDL_RenderFillRect(m_renderer, &_rect);
+}
+void Renderer::RenderLine(float x1, float y1, float x2, float y2)
+{
+    SDL_RenderLine(m_renderer, x1, y1, x2, y2);
+}

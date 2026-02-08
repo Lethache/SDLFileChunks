@@ -20,6 +20,13 @@ public:
     void ClearScreen();
     void Shutdown();
 
+    void RenderPoint(SDL_FPoint _position);
+    void RenderLine(SDL_FRect _lineRect);
+    void RenderRectangle(SDL_FRect _rect);
+    void RenderFillRectangle(SDL_FRect _rect);
+
+    void RenderLine(float x1, float y1, float x2, float y2);
+
 private:
     // Members
     SDL_Window* m_window;
