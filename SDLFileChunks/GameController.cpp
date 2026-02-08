@@ -1,9 +1,12 @@
 #include "GameController.h"
 #include "Renderer.h"
+#include "AssetController.h"
+#include "Texture.h"
+#include "ObjectPool.h"
 
 GameController::GameController()
 {
-    m_sdlEvent = { };
+    m_sdlEvent = {};
 }
 
 GameController::~GameController()
@@ -12,49 +15,33 @@ GameController::~GameController()
 
 void GameController::RunGame()
 {
+    AssetController::Instance().Initialize(100000000);
+
     Renderer* r = &Renderer::Instance();
     r->Initialize(800, 600);
 
-    bool running = true;
+    Texture::Pool = new ObjectPool<Texture>();
+    Texture* texture = Texture::Pool->GetResource();
+    texture->Load("../Assets/Textures/Emoji.tga");
 
+    bool running = true;
     while (running)
     {
-        // Handle events
         while (SDL_PollEvent(&m_sdlEvent))
         {
             if (m_sdlEvent.type == SDL_EVENT_QUIT)
-            {
                 running = false;
-            }
         }
 
-        // Clear screen every frame (prevents flicker/artefacts)
+        // Красный фон как на слайде
         r->SetDrawColor(SDL_Color{ 255, 0, 0, 255 });
         r->ClearScreen();
 
-        // Yellow dotted line
-        r->SetDrawColor(SDL_Color{ 255, 255, 0, 255 });
-        for (unsigned int count = 0; count < 800; count++)
-        {
-            if (count % 2 == 0)
-                r->RenderPoint(SDL_FPoint{ (float)count, 300 });
-        }
+        r->RenderTexture(texture, SDL_Point{ 10, 10 });
 
-        // Blue solid vertical line
-        r->SetDrawColor(SDL_Color{ 0, 0, 255, 255 });
-        r->RenderLine(SDL_FRect{ 400, 0, 1, 600 });
-
-        // Green rectangle outline
-        r->SetDrawColor(SDL_Color{ 0, 255, 0, 255 });
-        r->RenderRectangle(SDL_FRect{ 200, 200, 100, 100 });
-
-        // White filled rectangle
-        r->SetDrawColor(SDL_Color{ 255, 255, 255, 255 });
-        r->RenderFillRectangle(SDL_FRect{ 400, 400, 100, 100 });
-
-        // Present
         SDL_RenderPresent(r->GetRenderer());
     }
 
+    delete Texture::Pool;
     r->Shutdown();
 }

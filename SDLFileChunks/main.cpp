@@ -1,7 +1,8 @@
 #include "GameController.h"
 
-int main() {
-	GameController::Instance().RunGame();
+int main()
+{
+    GameController::Instance().RunGame();
 
-	return 0;
+    return 0;
 }

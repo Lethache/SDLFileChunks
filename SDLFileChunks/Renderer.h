@@ -2,36 +2,34 @@
 #define RENDERER_H
 
 #include "StandartIncludes.h"
+#include "Texture.h"
+
+class Asset;
 
 class Renderer : public Singleton<Renderer>
 {
 public:
-    // Constructors/Destructors
     Renderer();
     virtual ~Renderer();
 
-    // Accessors
     SDL_Window* GetWindow() { return m_window; }
     SDL_Renderer* GetRenderer() { return m_renderer; }
 
-    // Methods
     void Initialize(int _xResolution, int _yResolution);
     void SetDrawColor(SDL_Color _color);
     void ClearScreen();
+
+    SDL_Texture* GetSDLTexture(Texture* _texture);
+    void RenderTexture(Texture* _texture, SDL_Point _point);
+
     void Shutdown();
 
-    void RenderPoint(SDL_FPoint _position);
-    void RenderLine(SDL_FRect _lineRect);
-    void RenderRectangle(SDL_FRect _rect);
-    void RenderFillRectangle(SDL_FRect _rect);
-
-    void RenderLine(float x1, float y1, float x2, float y2);
-
 private:
-    // Members
     SDL_Window* m_window;
     SDL_Renderer* m_renderer;
-    SDL_Rect m_destRect;
+    SDL_FRect m_destRect;
+    SDL_Surface* m_surface;
+    map<string, SDL_Texture*> m_textures;
 };
 
 #endif // RENDERER_H
