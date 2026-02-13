@@ -149,6 +149,8 @@
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="Resource.cpp" />
     <ClCompile Include="SoundEffect.cpp" />
+    <ClCompile Include="SpriteAnim.cpp" />
+    <ClCompile Include="SpriteSheet.cpp" />
     <ClCompile Include="StackAllocator.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="TGAReader.cpp" />
@@ -173,6 +175,8 @@
     <ClInclude Include="Serializable.h" />
     <ClInclude Include="Singleton.h" />
     <ClInclude Include="SoundEffect.h" />
+    <ClInclude Include="SpriteAnim.h" />
+    <ClInclude Include="SpriteSheet.h" />
     <ClInclude Include="StackAllocator.h" />
     <ClInclude Include="StandartIncludes.h" />
     <ClInclude Include="Texture.h" />
