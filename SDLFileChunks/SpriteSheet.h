@@ -37,7 +37,7 @@ public:
 
     void SetSize(Byte1 _rows, Byte1 _columns, Byte1 _clipSizeX, Byte1 _clipSizeY);
     void AddAnimation(AnimationNames _name, short _clipStart, short _clipCount, float _clipSpeed);
-    SDL_FRect Update(AnimationNames _name);
+    SDL_FRect Update(AnimationNames _name , float _deltaTime);
     
     int GetCurrentClip(AnimationNames _name);
 

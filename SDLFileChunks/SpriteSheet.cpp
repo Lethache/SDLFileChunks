@@ -34,7 +34,7 @@ void SpriteSheet::AddAnimation(AnimationNames _name, short _clipStart, short _cl
     m_animations[_name] = anim;
 }
 
-SDL_FRect SpriteSheet::Update(AnimationNames _name)
+SDL_FRect SpriteSheet::Update(AnimationNames _name, float _deltaTime)
 {
     short s = m_animations[_name]->GetClipCurrent();
     short posX = s % m_columns * m_clipSizeX;
@@ -42,7 +42,7 @@ SDL_FRect SpriteSheet::Update(AnimationNames _name)
 
     SDL_FRect r = SDL_FRect{ (float)posX, (float)posY, (float)m_clipSizeX, (float)m_clipSizeY };
 
-    m_animations[_name]->Update();
+    m_animations[_name]->Update(_deltaTime);
     return r;
 }
 
