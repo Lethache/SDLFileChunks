@@ -105,18 +105,23 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)External\SDL3-3.4.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)External\SDL3-3.4.0\include;$(SolutionDir)External\SDL3_ttf-3.2.2\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)External\SDL3-3.4.0\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>SDL3.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)External\SDL3-3.4.0\lib\x64;$(SolutionDir)External\SDL3_ttf-3.2.2\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>SDL3.lib;SDL3_ttf.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>copy /Y "$(SolutionDir)External\SDL3-3.4.0\lib\x64\SDL3.dll" "$(TargetDir)"
 </Command>
     </PostBuildEvent>
+    <PreBuildEvent>
+      <Command>copy /Y "$(SolutionDir)External\SDL3-3.4.0\lib\x64\SDL3.dll" "$(TargetDir)"
+copy /Y "$(SolutionDir)External\SDL3_ttf-3.2.2\lib\x64\SDL3_ttf.dll" "$(TargetDir)"
+</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -154,6 +159,7 @@
     <ClCompile Include="StackAllocator.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="TGAReader.cpp" />
+    <ClCompile Include="TTFont.cpp" />
     <ClCompile Include="Unit.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -181,6 +187,7 @@
     <ClInclude Include="StandartIncludes.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="TGAReader.h" />
+    <ClInclude Include="TTFont.h" />
     <ClInclude Include="Unit.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
