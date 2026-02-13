@@ -47,10 +47,15 @@ void GameController::RunGame()
         r->RenderTexture(sheet, sheet->Update(EN_AN_IDLE), SDL_FRect{ 0, 0, 69 * 3, 44 * 3 });
         r->RenderTexture(sheet, sheet->Update(EN_AN_RUN), SDL_FRect{ 0, 150, 69 * 3, 44 * 3 });
 
-        font->Write(r->GetRenderer(), "Testing 123!!!", SDL_Color{ 0, 255, 0, 255 }, SDL_Point{ 150, 50 });
+        std::string s = "Frame number: " + std::to_string(sheet->GetCurrentClip(EN_AN_IDLE));
+        font->Write(r->GetRenderer(), s.c_str(), SDL_Color{ 0, 255, 0 }, SDL_Point{ 250, 50 });
+
+        s = "Frame number: " + std::to_string(sheet->GetCurrentClip(EN_AN_RUN));
+        font->Write(r->GetRenderer(), s.c_str(), SDL_Color{ 0, 255, 0 }, SDL_Point{ 250, 200 });
 
         SDL_RenderPresent(r->GetRenderer());
     }
+
 
     delete SpriteAnim::Pool;
     delete SpriteSheet::Pool;
