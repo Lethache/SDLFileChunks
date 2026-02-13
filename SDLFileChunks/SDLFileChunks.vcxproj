@@ -159,6 +159,7 @@ copy /Y "$(SolutionDir)External\SDL3_ttf-3.2.2\lib\x64\SDL3_ttf.dll" "$(TargetDi
     <ClCompile Include="StackAllocator.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="TGAReader.cpp" />
+    <ClCompile Include="Timing.cpp" />
     <ClCompile Include="TTFont.cpp" />
     <ClCompile Include="Unit.cpp" />
   </ItemGroup>
@@ -187,6 +188,7 @@ copy /Y "$(SolutionDir)External\SDL3_ttf-3.2.2\lib\x64\SDL3_ttf.dll" "$(TargetDi
     <ClInclude Include="StandartIncludes.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="TGAReader.h" />
+    <ClInclude Include="Timing.h" />
     <ClInclude Include="TTFont.h" />
     <ClInclude Include="Unit.h" />
   </ItemGroup>

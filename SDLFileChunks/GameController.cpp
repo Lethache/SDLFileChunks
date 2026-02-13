@@ -1,4 +1,4 @@
-// GameController.cpp (вставка как на слайде)
+
 #include "GameController.h"
 #include "SpriteSheet.h"
 #include "Renderer.h"
@@ -7,6 +7,7 @@
 #include "SpriteAnim.h"
 #include "ObjectPool.h"
 #include "GameController.h"
+#include "Timing.h"
 
 GameController::GameController()
 {
@@ -16,11 +17,11 @@ GameController::GameController()
 GameController::~GameController()
 {
 }
-
 void GameController::RunGame()
 {
     AssetController::Instance().Initialize(10000000); // Allocate 10MB
 
+    Timing* t = &Timing::Instance();
     Renderer* r = &Renderer::Instance();
     r->Initialize(800, 600);
     SDL_Point ws = r->GetWindowSize();
@@ -39,6 +40,8 @@ void GameController::RunGame()
 
     while (m_sdlEvent.type != SDL_EVENT_QUIT)
     {
+        t->Tick();
+
         SDL_PollEvent(&m_sdlEvent);
 
         r->SetDrawColor(SDL_Color{ 255, 255, 255, 255 });
@@ -48,14 +51,16 @@ void GameController::RunGame()
         r->RenderTexture(sheet, sheet->Update(EN_AN_RUN), SDL_FRect{ 0, 150, 69 * 3, 44 * 3 });
 
         std::string s = "Frame number: " + std::to_string(sheet->GetCurrentClip(EN_AN_IDLE));
-        font->Write(r->GetRenderer(), s.c_str(), SDL_Color{ 0, 255, 0 }, SDL_Point{ 250, 50 });
+        font->Write(r->GetRenderer(), s.c_str(), SDL_Color{ 0, 255, 0, 255 }, SDL_Point{ 250, 50 });
 
         s = "Frame number: " + std::to_string(sheet->GetCurrentClip(EN_AN_RUN));
-        font->Write(r->GetRenderer(), s.c_str(), SDL_Color{ 0, 255, 0 }, SDL_Point{ 250, 200 });
+        font->Write(r->GetRenderer(), s.c_str(), SDL_Color{ 0, 255, 0, 255 }, SDL_Point{ 250, 200 });
+
+        std::string fps = "Frames Per Second: " + std::to_string(t->GetFPS());
+        font->Write(r->GetRenderer(), fps.c_str(), SDL_Color{ 0, 0, 255, 255 }, SDL_Point{ 0, 0 });
 
         SDL_RenderPresent(r->GetRenderer());
     }
-
 
     delete SpriteAnim::Pool;
     delete SpriteSheet::Pool;
