@@ -40,7 +40,7 @@ void GameController::RunGame()
                 r->RenderTexture(
                     texture,
                     SDL_FRect{ xPos, 0.0f, 69.0f, 44.0f },
-                    SDL_FRect{ xPos, 100.0f, 69.0f, 44.0f }
+                    SDL_FRect{ xPos, 100.0f, 69.0f *2 , 44.0f* 2  }
                 );
             }
 
