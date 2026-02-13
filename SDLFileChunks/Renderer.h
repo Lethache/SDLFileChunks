@@ -34,7 +34,8 @@ public:
 
     void RenderTexture(Texture* _texture, SDL_Point _point);
     void RenderTexture(Texture* _texture, SDL_FRect _rect);
-
+    void RenderTexture(Texture* _texture, SDL_FRect _srcRect, SDL_FRect _destRect);
+	
     void Shutdown();
 private:
     // Members
