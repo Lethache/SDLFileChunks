@@ -1,4 +1,3 @@
-// Timing.h
 #ifndef TIMING_H
 #define TIMING_H
 
@@ -17,6 +16,8 @@ public:
 
     // Methods
     void Tick();
+    void SetFPS(int _fps);
+    void CapFPS();
 
 private:
     // Members
@@ -26,6 +27,8 @@ private:
     unsigned int m_fpsCount;
     unsigned int m_fpsLast;
     float m_deltaTime;
+    unsigned int m_targetFPS;
+    unsigned int m_ticksPerFrame;
 };
 
 #endif // TIMING_H

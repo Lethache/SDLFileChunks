@@ -1,4 +1,4 @@
-
+﻿
 #include "GameController.h"
 #include "SpriteSheet.h"
 #include "Renderer.h"
@@ -45,28 +45,25 @@ void GameController::RunGame()
         t->Tick();
 
         SDL_PollEvent(&m_sdlEvent);
-
         r->SetDrawColor(SDL_Color{ 255, 255, 255, 255 });
         r->ClearScreen();
 
+        // Рендеринг анимаций
         r->RenderTexture(sheet, sheet->Update(EN_AN_IDLE, t->GetDeltaTime()), SDL_FRect{ 0, 0, 69 * 3, 44 * 3 });
         r->RenderTexture(sheet, sheet->Update(EN_AN_RUN, t->GetDeltaTime()), SDL_FRect{ 0, 150, 69 * 3, 44 * 3 });
 
+        // Вывод текста (номера кадров и FPS)
         std::string s = "Frame number: " + std::to_string(sheet->GetCurrentClip(EN_AN_IDLE));
-        font->Write(r->GetRenderer(), s.c_str(), SDL_Color{ 0, 255, 0, 255 }, SDL_Point{ 250, 50 });
+        font->Write(r->GetRenderer(), s.c_str(), SDL_Color{ 0, 255, 0 }, SDL_Point{ 250, 50 });
 
         s = "Frame number: " + std::to_string(sheet->GetCurrentClip(EN_AN_RUN));
-        font->Write(r->GetRenderer(), s.c_str(), SDL_Color{ 0, 255, 0, 255 }, SDL_Point{ 250, 200 });
+        font->Write(r->GetRenderer(), s.c_str(), SDL_Color{ 0, 255, 0 }, SDL_Point{ 250, 200 });
 
         std::string fps = "Frames Per Second: " + std::to_string(t->GetFPS());
-        font->Write(r->GetRenderer(), fps.c_str(), SDL_Color{ 0, 0, 255, 255 }, SDL_Point{ 0, 0 });
+        font->Write(r->GetRenderer(), fps.c_str(), SDL_Color{ 0, 0, 255 }, SDL_Point{ 0, 0 });
 
         SDL_RenderPresent(r->GetRenderer());
+
+        t->CapFPS();
     }
-
-    delete SpriteAnim::Pool;
-    delete SpriteSheet::Pool;
-
-    font->Shutdown();
-    r->Shutdown();
 }
