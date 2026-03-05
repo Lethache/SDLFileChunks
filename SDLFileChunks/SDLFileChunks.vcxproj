@@ -152,6 +152,7 @@ copy /Y "$(SolutionDir)External\SDL3_ttf-3.2.2\lib\x64\SDL3_ttf.dll" "$(TargetDi
     <ClCompile Include="Level.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Renderer.cpp" />
+    <ClCompile Include="RenderTarget.cpp" />
     <ClCompile Include="Resource.cpp" />
     <ClCompile Include="SoundEffect.cpp" />
     <ClCompile Include="SpriteAnim.cpp" />
@@ -178,6 +179,7 @@ copy /Y "$(SolutionDir)External\SDL3_ttf-3.2.2\lib\x64\SDL3_ttf.dll" "$(TargetDi
     <ClInclude Include="Level.h" />
     <ClInclude Include="ObjectPool.h" />
     <ClInclude Include="Renderer.h" />
+    <ClInclude Include="RenderTarget.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="Serializable.h" />
     <ClInclude Include="Singleton.h" />

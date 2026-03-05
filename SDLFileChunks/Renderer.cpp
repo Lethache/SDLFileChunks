@@ -1,6 +1,6 @@
 #include "Renderer.h"
 #include "Asset.h"
-
+#include "RenderTarget.h"
 Renderer::Renderer()
 {
     m_window = nullptr;
@@ -129,10 +129,14 @@ void Renderer::SetViewport(SDL_Rect _viewport)
     SDL_SetRenderViewport(m_renderer, &_viewport);
 }
 
-void Renderer::RenderTexture(Texture* _texture, SDL_FRect _rect)
+void Renderer::RenderTexture(SDL_Texture* _texture, SDL_FRect _srcRect, SDL_FRect _destRect, double _angle)
 {
-    M_ASSERT((SDL_RenderTextureRotated(m_renderer, GetSDLTexture(_texture),
-        NULL, &_rect, 0, NULL, SDL_FLIP_VERTICAL) >= 0), "Could not render texture");
+    SDL_FPoint size;
+    SDL_GetTextureSize(_texture, &size.x, &size.y);
+
+    M_ASSERT((SDL_RenderTextureRotated(m_renderer, _texture,
+        &_srcRect, &_destRect,
+        _angle, nullptr, SDL_FLIP_NONE) >= 0), "Could not render texture");
 }
 
 void Renderer::RenderTexture(Texture* _texture, SDL_FRect _srcRect, SDL_FRect _destRect)
