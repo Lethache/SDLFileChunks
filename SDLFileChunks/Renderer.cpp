@@ -14,12 +14,29 @@ Renderer::~Renderer()
     Shutdown();
 }
 
-void Renderer::Initialize(int _xResolution, int _yResolution)
+void Renderer::Initialize()
 {
     M_ASSERT((SDL_InitSubSystem(SDL_INIT_VIDEO) >= 0), "Failed to initialize SDL video.");
-    SDL_CreateWindowAndRenderer("My SDL3 Game", _xResolution, _yResolution, 0, &m_window, &m_renderer);
+
+    SDL_Point res = GetPrimaryResolution();
+
+    SDL_CreateWindowAndRenderer("My SDL3 Game", res.x, res.y, 0, &m_window, &m_renderer);
+
     M_ASSERT(m_window != nullptr, "Failed to initialize SDL window.");
     M_ASSERT(m_renderer != nullptr, "Failed to initialize SDL renderer.");
+}
+
+SDL_Point Renderer::GetPrimaryResolution()
+{
+    SDL_DisplayID primaryDisplayID;
+
+    M_ASSERT((primaryDisplayID = SDL_GetPrimaryDisplay()) != 0, "Failed to get primary display.");
+
+    const SDL_DisplayMode* mode;
+
+    M_ASSERT((mode = SDL_GetDesktopDisplayMode(primaryDisplayID)) != NULL, "SDL_GetDesktopDisplayMode failed.");
+
+    return SDL_Point{ mode->w, mode->h };
 }
 
 void Renderer::Shutdown()
@@ -145,4 +162,29 @@ void Renderer::RenderTexture(Texture* _texture, SDL_FRect _srcRect, SDL_FRect _d
 
     M_ASSERT((SDL_RenderTextureRotated(m_renderer, GetSDLTexture(_texture),
         &_srcRect, &_destRect, 0, NULL, SDL_FLIP_VERTICAL) >= 0), "Could not render texture");
+}
+void Renderer::EnumerateDisplayModes()
+{
+    SDL_DisplayID* displays;
+    int numDisplays;
+
+    M_ASSERT((displays = SDL_GetDisplays(&numDisplays)) != nullptr, "SDL_GetDisplays failed.");
+
+    for (int i = 0; i < numDisplays; ++i)
+    {
+        int numModes = 0;
+
+        SDL_DisplayMode** modes = SDL_GetFullscreenDisplayModes(displays[i], &numModes);
+
+        M_ASSERT(modes != nullptr, "SDL_GetFullscreenDisplayModes failed.");
+
+        for (int j = 0; j < numModes; ++j)
+        {
+            m_resolutions.push_back(*modes[j]);
+        }
+
+        SDL_free(modes);
+    }
+
+    SDL_free(displays);
 }

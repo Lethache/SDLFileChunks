@@ -16,6 +16,7 @@
 #include <SDL3/SDL_pixels.h>
 #include <SDL3/SDL_surface.h>
 #include <SDL3_ttf/SDL_ttf.h>
+#include <sstream>
 // Project headers
 #include "Singleton.h"
 
