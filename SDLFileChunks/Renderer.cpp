@@ -82,24 +82,25 @@ void Renderer::RenderFillRectangle(SDL_FRect _rect)
 
 SDL_Texture* Renderer::GetSDLTexture(Texture* _texture)
 {
-    
     Asset* asset = _texture->GetData();
     string guid = asset->GetGUID();
-    if (m_textures.count(guid) != 0)
+    if (m_textures.count(guid) == 0)
     {
-        return m_textures[guid];
-    }
-    
-    ImageInfo* ii = _texture->GetImageInfo();
+        // If not found create the GPU texture
+        ImageInfo* ii = _texture->GetImageInfo();
+        m_surface = SDL_CreateSurfaceFrom(ii->Width, ii->Height,
+            SDL_GetPixelFormatForMasks(ii->BitsPerPixel, 0x00FF0000, 0x0000FF00, 0x000000FF, 0xFF000000),
+            asset->GetData() + _texture->GetImageInfo()->DataOffset, ii->Width * ii->BitsPerPixel / 8);
 
-    m_surface = SDL_CreateSurfaceFrom(ii->Width, ii->Height,
-        SDL_GetPixelFormatForMasks(ii->BitsPerPixel, 0x00FF0000, 0x0000FF00, 0x000000FF, 0xFF000000),
-        asset->GetData() + _texture->GetImageInfo()->DataOffset, ii->Width * ii->BitsPerPixel / 8);
-    SDL_Texture* texture = SDL_CreateTextureFromSurface(m_renderer, m_surface);
-    SDL_DestroySurface(m_surface);
-    m_surface = nullptr;
-    m_textures[guid] = texture;
-    return texture;
+        SDL_Texture* texture = SDL_CreateTextureFromSurface(m_renderer, m_surface);
+        SDL_DestroySurface(m_surface);
+        m_surface = nullptr;
+        m_textures[guid] = texture;
+    }
+
+    SDL_SetTextureBlendMode(m_textures[guid], _texture->GetBlendMode());
+    SDL_SetTextureAlphaMod(m_textures[guid], _texture->GetBlendAlpha());
+    return m_textures[guid];
 }
 
 void Renderer::RenderTexture(Texture* _texture, SDL_Point _point)

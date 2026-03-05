@@ -1,8 +1,10 @@
 #include "GameController.h"
 
-int main()
+int main(int argc, char* argv[])
 {
-    GameController::Instance().RunGame();
+    (void)argc;
+    (void)argv;
 
+    GameController::Instance().RunGame();
     return 0;
 }
