@@ -1,6 +1,7 @@
 #ifndef STANDARD_INCLUDES_H
 #define STANDARD_INCLUDES_H
-
+#define NATIVE_XRES 1920
+#define NATIVE_YRES 1080
 
 #define SDL_MAIN_HANDLER 
 // Include standart headers

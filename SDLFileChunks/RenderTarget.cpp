@@ -40,10 +40,15 @@ void RenderTarget::Stop()
 
 void RenderTarget::Render(float _deltaTime)
 {
-    m_rotation += 10 * _deltaTime;
     SDL_Point ws = Renderer::Instance().GetWindowSize();
+    float perc = float(NATIVE_YRES - ws.y) / NATIVE_YRES; // 1080 - 600 = 480 therefore 480 = 0.44444444 of 1080
+    float xRes = ws.x + (NATIVE_XRES * perc); // now add 0.4444444 * NATIVE_XRES to the current resolution
+    // 0.4444444 * 1920 = 853 + 800 = 1653
+    float yRes = NATIVE_YRES;             // same as ws.y + (NATIVE_YRES * perc) = 600 * 0.4444444 = 480 + 600 = 1080
+
     Renderer::Instance().RenderTexture(m_texture,
+        SDL_FRect{ 0, NATIVE_YRES - yRes, xRes, yRes },
         SDL_FRect{ 0, 0, (float)ws.x, (float)ws.y },
-        SDL_FRect{ 0, 0, (float)ws.x, (float)ws.y },
-        m_rotation);
+        m_rotation
+    );
 }
