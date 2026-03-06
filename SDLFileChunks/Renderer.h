@@ -22,6 +22,7 @@ public:
 
     // Methods
     void Initialize();
+    void ChangeDisplayMode(SDL_DisplayMode* _mode, bool _fullscreen);
     SDL_Point GetPrimaryResolution();
     void EnumerateDisplayModes();
     SDL_Point GetWindowSize();

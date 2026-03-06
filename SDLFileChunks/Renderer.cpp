@@ -188,3 +188,24 @@ void Renderer::EnumerateDisplayModes()
 
     SDL_free(displays);
 }
+void Renderer::ChangeDisplayMode(SDL_DisplayMode* _mode, bool _fullscreen)
+{
+    if (_fullscreen)
+    {
+        M_ASSERT((SDL_SetWindowFullscreen(m_window, SDL_WINDOW_FULLSCREEN) >= 0),
+            "Failed to set fullscreen mode.");
+
+        SDL_SetWindowFullscreenMode(m_window, _mode);
+    }
+    else
+    {
+        M_ASSERT((SDL_SetWindowFullscreen(m_window, 0) >= 0),
+            "Failed to exit fullscreen mode.");
+
+        M_ASSERT(SDL_SetWindowSize(m_window, _mode->w, _mode->h) == true,
+            "Failed to set windows size.");
+    }
+
+    M_ASSERT(SDL_SetWindowPosition(m_window, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED) == true,
+        "Failed to set window position.");
+}
