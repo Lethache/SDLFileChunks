@@ -24,7 +24,7 @@ void GameController::RunGame()
 
     r->Initialize();
     r->EnumerateDisplayModes();
-	r->ChangeDisplayMode(&r->GetResolutions()[16], true); // change to 1920x1080 fullscreen or another that we need 
+	r->ChangeDisplayMode(&r->GetResolutions()[1], true); // change to 1920x1080 fullscreen or another that we need 
 
     TTFont* font = new TTFont();
     font->Initialize(20);
