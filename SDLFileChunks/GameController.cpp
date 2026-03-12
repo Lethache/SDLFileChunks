@@ -1,78 +1,104 @@
-﻿
-#include "GameController.h"
-#include "SpriteSheet.h"
+﻿#include "GameController.h"
 #include "Renderer.h"
 #include "TTFont.h"
-#include "AssetController.h"
-#include "SpriteAnim.h"
-#include "ObjectPool.h"
-#include "GameController.h"
-#include "Timing.h"
-#include "RenderTarget.h"
+#include "InputController.h"
+#include "Keyboard.h"
+
 GameController::GameController()
 {
-    m_sdlEvent = {};
+    m_sdlEvent = { };
+    m_renderer = nullptr;
+    m_fArial20 = nullptr;
+    m_input = nullptr;
+    m_quit = false;
 }
 
 GameController::~GameController()
 {
+    ShutDown();
 }
-void GameController::RunGame()
+
+void GameController::Initialize()
 {
-    Renderer* r = &Renderer::Instance();
-    Timing* t = &Timing::Instance();
+  
+    m_renderer = &Renderer::Instance();
+    m_renderer->Initialize();
 
-    r->Initialize();
-    r->EnumerateDisplayModes();
-	r->ChangeDisplayMode(&r->GetResolutions()[1], true); // change to 1920x1080 fullscreen or another that we need 
+    
+    m_input = &InputController::Instance();
+    m_input->Initialize(m_renderer->GetWindow());
 
-    TTFont* font = new TTFont();
-    font->Initialize(20);
+    
+    m_fArial20 = new TTFont();
+    m_fArial20->Initialize(20);
+}
 
-    AssetController::Instance().Initialize(10000000); // Allocate 10MB
-    SpriteSheet::Pool = new ObjectPool<SpriteSheet>();
-    SpriteAnim::Pool = new ObjectPool<SpriteAnim>();
-    SpriteSheet* sheet = SpriteSheet::Pool->GetResource();
-    sheet->Load("../Assets/Textures/Warrior.tga");
-    sheet->SetSize(17, 6, 69, 44);
-    sheet->AddAnimation(EN_AN_RUN, 6, 8, 6.0f);
-
-    RenderTarget* rt = new RenderTarget();
-    rt->Create(NATIVE_XRES, NATIVE_YRES);
-    while (m_sdlEvent.type != SDL_EVENT_QUIT)
+void GameController::ShutDown()
+{
+   
+    if (m_fArial20 != nullptr)
     {
-        t->Tick();
-        rt->Start();
-        SDL_PollEvent(&m_sdlEvent);
-        r->SetDrawColor(SDL_Color{ 255, 255, 255, 255 });
-        r->ClearScreen();
-        r->SetDrawColor(SDL_Color{ 0, 0, 0, 255 });
-        r->RenderFillRectangle(SDL_FRect{ 0, 150, 69 * 3, 44 * 3 });
-        r->RenderTexture(sheet, sheet->Update(EN_AN_RUN, t->GetDeltaTime()), SDL_FRect{ 0, 150, 69 * 3, 44 * 3 });
+        delete m_fArial20;
+        m_fArial20 = nullptr;
+    }
+}
 
-        std::string fps = "Frames Per Second: " + std::to_string(t->GetFPS());
-        font->Write(r->GetRenderer(), fps.c_str(), SDL_Color{ 0, 0, 255 }, SDL_Point{ 0, 0 });
-        std::string res = "Resolution: " + std::to_string(r->GetWindowSize().x) + "x" + std::to_string(r->GetWindowSize().y);
-        font->Write(r->GetRenderer(), res.c_str(), SDL_Color{ 0, 0, 255 }, SDL_Point{ 0, 20 });
-        std::string s = "Frame number: " + std::to_string(sheet->GetCurrentClip(EN_AN_RUN));
-        font->Write(r->GetRenderer(), s.c_str(), SDL_Color{ 0, 255, 0 }, SDL_Point{ 250, 200 });
+void GameController::HandleInput(SDL_Event _event)
+{
+    string temp;
 
-        rt->Stop();
-        r->SetDrawColor(SDL_Color{ 0, 0, 0, 255 });
-        r->ClearScreen();
-        rt->Render(t->GetDeltaTime()); // Scale native resolution to screen resolution
-        SDL_RenderPresent(r->GetRenderer());
-
-        if ((m_sdlEvent.type == SDL_EVENT_KEY_DOWN) &&
-            (m_sdlEvent.key.key == SDLK_ESCAPE))
-        {
-            break;
-        }
-
-        t->CapFPS();
+    
+    if ((_event.type == SDL_EVENT_QUIT) ||
+        (m_input->KB()->KeyUp(_event, SDLK_ESCAPE)))
+    {
+        m_quit = true;
+    }
+   
+    else if ((temp = m_input->KB()->TextInput(_event)) != "")
+    {
+        m_inputText += temp;
+    }
+    
+    else if (m_input->KB()->KeyUp(_event, SDLK_RETURN))
+    {
+        m_inputText = "";
     }
 
-    delete rt;
-    font->Shutdown();
-    r->Shutdown();
+   
+    m_keyStates = "Current Keys Down: ";
+    if (m_input->KB()->GetKeyStates()[SDL_SCANCODE_W])
+    {
+        m_keyStates += "W ";
+    }
+    if (m_input->KB()->GetKeyStates()[SDL_SCANCODE_S])
+    {
+        m_keyStates += "S ";
+    }
+}
+
+void GameController::RunGame()
+{
+    Initialize();
+
+    while (!m_quit)
+    {
+       
+        m_renderer->SetDrawColor({ 255, 255, 255, 255 });
+        m_renderer->ClearScreen();
+
+        
+        while (SDL_PollEvent(&m_sdlEvent))
+        {
+            HandleInput(m_sdlEvent);
+        }
+
+        m_fArial20->Write(m_renderer->GetRenderer(), m_inputText.c_str(),
+            SDL_Color{ 0, 255, 0, 255 }, SDL_Point{ 250, 200 });
+
+        m_fArial20->Write(m_renderer->GetRenderer(), m_keyStates.c_str(),
+            SDL_Color{ 0, 255, 0, 255 }, SDL_Point{ 250, 220 });
+
+        
+        SDL_RenderPresent(m_renderer->GetRenderer());
+    }
 }
