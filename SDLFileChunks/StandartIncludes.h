@@ -1,23 +1,26 @@
 #ifndef STANDARD_INCLUDES_H
 #define STANDARD_INCLUDES_H
+
+#define SDL_MAIN_HANDLED
+
 #define NATIVE_XRES 1920
 #define NATIVE_YRES 1080
 
-#define SDL_MAIN_HANDLER 
-// Include standart headers
+// Include standard headers
 #include <string>
 #include <vector>
 #include <iostream>
-#include <fstream> // Library for file operations
+#include <fstream>
 #include <cinttypes>
 #include <stdio.h>
 #include <thread>
-#include <map>  
-#include <SDL3/SDL.h>
-#include <SDL3/SDL_pixels.h>
-#include <SDL3/SDL_surface.h>
-#include <SDL3_ttf/SDL_ttf.h>
+#include <map>
 #include <sstream>
+
+#include <SDL3/SDL.h>
+#include <SDL3_ttf/SDL_ttf.h>
+#include <SDL3/SDL_gamepad.h>
+
 // Project headers
 #include "Singleton.h"
 
@@ -25,7 +28,6 @@
 #ifdef _WIN32
 #include <Windows.h>
 #include <direct.h>
-
 #define M_ASSERT(_cond, _msg) \
     if (!(_cond)) { OutputDebugStringA(_msg); std::abort(); }
 #define GetCurrentDir _getcwd
@@ -36,5 +38,4 @@
 
 using namespace std;
 
-
-#endif // STANDARD_INCLUDES_H 
+#endif // STANDARD_INCLUDES_H

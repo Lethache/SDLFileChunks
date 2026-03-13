@@ -3,6 +3,8 @@
 #include "TTFont.h"
 #include "InputController.h"
 #include "Keyboard.h"
+#include "Mouse.h"
+#include "Gamepad.h"
 
 GameController::GameController()
 {
@@ -11,6 +13,9 @@ GameController::GameController()
     m_fArial20 = nullptr;
     m_input = nullptr;
     m_quit = false;
+    m_inputText = "";
+    m_keyStates = "";
+    m_gpInfo = "Searching for gamepads...";
 }
 
 GameController::~GameController()
@@ -20,7 +25,7 @@ GameController::~GameController()
 
 void GameController::Initialize()
 {
-  
+    
     m_renderer = &Renderer::Instance();
     m_renderer->Initialize();
 
@@ -35,7 +40,6 @@ void GameController::Initialize()
 
 void GameController::ShutDown()
 {
-   
     if (m_fArial20 != nullptr)
     {
         delete m_fArial20;
@@ -45,7 +49,8 @@ void GameController::ShutDown()
 
 void GameController::HandleInput(SDL_Event _event)
 {
-    string temp;
+    
+    m_input->Process();
 
     
     if ((_event.type == SDL_EVENT_QUIT) ||
@@ -53,32 +58,32 @@ void GameController::HandleInput(SDL_Event _event)
     {
         m_quit = true;
     }
-   
-    else if ((temp = m_input->KB()->TextInput(_event)) != "")
-    {
-        m_inputText += temp;
-    }
+
     
-    else if (m_input->KB()->KeyUp(_event, SDLK_RETURN))
-    {
-        m_inputText = "";
-    }
+    m_keyStates = "Mouse Buttons: ";
+    if (m_input->MS()->LDown()) m_keyStates += "L ";
+    if (m_input->MS()->RDown()) m_keyStates += "R ";
+    if (m_input->MS()->MDown()) m_keyStates += "M ";
+
+  
+    m_inputText = "Mouse Pos: " + std::to_string((int)m_input->MS()->GetX()) +
+        ", " + std::to_string((int)m_input->MS()->GetY());
 
    
-    m_keyStates = "Current Keys Down: ";
-    if (m_input->KB()->GetKeyStates()[SDL_SCANCODE_W])
+    if (m_input->GP()->Added(_event) || m_input->GP()->Removed(_event))
     {
-        m_keyStates += "W ";
-    }
-    if (m_input->KB()->GetKeyStates()[SDL_SCANCODE_S])
-    {
-        m_keyStates += "S ";
+        m_gpInfo = m_input->GP()->ToString();
     }
 }
 
 void GameController::RunGame()
 {
     Initialize();
+
+   
+    m_input->GP()->Detect();
+   
+    m_gpInfo = m_input->GP()->ToString();
 
     while (!m_quit)
     {
@@ -92,11 +97,21 @@ void GameController::RunGame()
             HandleInput(m_sdlEvent);
         }
 
-        m_fArial20->Write(m_renderer->GetRenderer(), m_inputText.c_str(),
-            SDL_Color{ 0, 255, 0, 255 }, SDL_Point{ 250, 200 });
+        
+        SDL_Color textColor = { 0, 200, 0, 255 };
 
+      
         m_fArial20->Write(m_renderer->GetRenderer(), m_keyStates.c_str(),
-            SDL_Color{ 0, 255, 0, 255 }, SDL_Point{ 250, 220 });
+            textColor, SDL_Point{ 50, 50 });
+
+        
+        m_fArial20->Write(m_renderer->GetRenderer(), m_inputText.c_str(),
+            textColor, SDL_Point{ 50, 80 });
+
+        
+        SDL_Color gpColor = { 200, 0, 0, 255 };
+        m_fArial20->Write(m_renderer->GetRenderer(), m_gpInfo.c_str(),
+            gpColor, SDL_Point{ 50, 120 });
 
         
         SDL_RenderPresent(m_renderer->GetRenderer());

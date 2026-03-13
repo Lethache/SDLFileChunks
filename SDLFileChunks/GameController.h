@@ -29,6 +29,7 @@ private:
     InputController* m_input;
     string m_inputText;
     string m_keyStates;
+    string m_gpInfo;
 };
 
 #endif // GAME_CONTROLLER_H

@@ -154,6 +154,7 @@ copy /Y "$(SolutionDir)External\SDL3_ttf-3.2.2\lib\x64\SDL3_ttf.dll" "$(TargetDi
     <ClCompile Include="Keyboard.cpp" />
     <ClCompile Include="Level.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Mouse.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="RenderTarget.cpp" />
     <ClCompile Include="Resource.cpp" />
@@ -183,6 +184,7 @@ copy /Y "$(SolutionDir)External\SDL3_ttf-3.2.2\lib\x64\SDL3_ttf.dll" "$(TargetDi
     <ClInclude Include="InputController.h" />
     <ClInclude Include="Keyboard.h" />
     <ClInclude Include="Level.h" />
+    <ClInclude Include="Mouse.h" />
     <ClInclude Include="ObjectPool.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="RenderTarget.h" />
