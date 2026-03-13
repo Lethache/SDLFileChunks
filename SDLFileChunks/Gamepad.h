@@ -9,34 +9,41 @@ struct GamepadInfo
     SDL_Gamepad* Gamepad = nullptr;
     string Name;
 
-    // Новые методы
+    // Переменные для хранения состояния стиков
+    SDL_FPoint LeftStick = { 0.0f, 0.0f };
+    SDL_FPoint RightStick = { 0.0f, 0.0f };
+
+    // Методы обработки кнопок
     SDL_GamepadButton ButtonDown(SDL_Event _event) const;
     SDL_GamepadButton ButtonUp(SDL_Event _event) const;
     bool ButtonHeld(SDL_GamepadButton _button) const;
+
+    
+    bool ProcessMotion(SDL_Event _event);
+    SDL_FPoint& GetLeftStick();
+    SDL_FPoint& GetRightStick();
+
     string ToString() const;
 };
 
 class Gamepad
 {
 public:
-    // Constructors/Destructors
     Gamepad() {}
-    virtual ~Gamepad() {}
+    virtual ~Gamepad();
 
-    // Accessors
-    vector<GamepadInfo> GetGamepads() const { return m_gamepads; }
+    // Возвращаем вектор указателей
+    vector<GamepadInfo*>& GetGamepads() { return m_gamepads; }
 
-    // Methods
     void Initialize();
     void Detect();
     bool Added(SDL_Event _event);
     bool Removed(SDL_Event _event);
-
     string ToString();
 
 private:
     bool Add(SDL_JoystickID _joystickId);
-    vector<GamepadInfo> m_gamepads;
+    vector<GamepadInfo*> m_gamepads;
 };
 
 #endif // GAMEPAD_H
