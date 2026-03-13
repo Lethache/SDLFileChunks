@@ -8,6 +8,12 @@ struct GamepadInfo
     SDL_JoystickID ID = -1;
     SDL_Gamepad* Gamepad = nullptr;
     string Name;
+
+    // Новые методы
+    SDL_GamepadButton ButtonDown(SDL_Event _event) const;
+    SDL_GamepadButton ButtonUp(SDL_Event _event) const;
+    bool ButtonHeld(SDL_GamepadButton _button) const;
+    string ToString() const;
 };
 
 class Gamepad
