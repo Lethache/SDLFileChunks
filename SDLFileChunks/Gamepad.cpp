@@ -57,15 +57,12 @@ void Gamepad::Detect()
     // В SDL3 получаем список ID всех подключенных геймпадов
     SDL_JoystickID* ids = SDL_GetGamepads(&count);
 
-    if (ids)
+    // Iterate over the list of gamepads
+    for (int i = 0; i < count; i++)
     {
-        for (int i = 0; i < count; i++)
-        {
-            Add(ids[i]);
-        }
-        // В SDL3 память от SDL_GetGamepads нужно освобождать вручную
-        SDL_free(ids);
+        Add(ids[i]);
     }
+    SDL_free(ids); // В SDL3 нужно освобождать список ID
 }
 
 bool Gamepad::Added(SDL_Event _event)
