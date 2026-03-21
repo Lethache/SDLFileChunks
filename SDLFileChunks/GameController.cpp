@@ -78,27 +78,39 @@ void GameController::RunGame()
 
     while (!m_quit)
     {
+       
         m_renderer->SetDrawColor({ 255, 255, 255, 255 });
         m_renderer->ClearScreen();
 
+       
         while (SDL_PollEvent(&m_sdlEvent))
         {
             HandleInput(m_sdlEvent);
         }
 
+      
         if (m_audio->GetMusic() != nullptr)
         {
-            string musInfo = "Music: Name - " + m_audio->GetMusicTitle() +
-                "  Pos - " + m_audio->MusicPosition() + "/" + m_audio->GetMusicLength();
-            m_fArial20->Write(m_renderer->GetRenderer(), musInfo.c_str(), SDL_Color{ 0, 0, 255 }, { 50, 50 });
+            string musInfo = ("Music: Name - " + m_audio->GetMusicTitle());
+            musInfo += ("      Position - " + m_audio->MusicPosition() + "/" + m_audio->GetMusicLength());
+
+            m_fArial20->Write(m_renderer->GetRenderer(), musInfo.c_str(),
+                SDL_Color{ 0, 0, 255 }, { 50, 50 });
         }
 
-        if (m_effect != nullptr && m_effect->GetData() != nullptr)
+        
+        int count = 0;
+        for (auto const& effect : m_audio->GetEffects())
         {
-            string effInfo = "Effect: Name - " + m_effect->GetData()->GetGUID();
-            m_fArial20->Write(m_renderer->GetRenderer(), effInfo.c_str(), SDL_Color{ 0, 255, 0 }, { 50, 100 });
+            
+            string effInfo = ("Effect " + to_string(count) + " : " + effect->m_name);
+
+            m_fArial20->Write(m_renderer->GetRenderer(), effInfo.c_str(),
+                SDL_Color{ 255, 0, 0 }, { 50, 100 + count * 30 });
+            count++;
         }
 
+       
         SDL_RenderPresent(m_renderer->GetRenderer());
     }
 }
