@@ -2,27 +2,27 @@
 #define SOUND_EFFECT_H
 
 #include "Resource.h"
-#include "Asset.h"
+#include "ObjectPool.h" 
+
+class Asset;
 
 class SoundEffect : public Resource
 {
 public:
-	//Constructor/Destructors 
-	SoundEffect();
-	virtual ~SoundEffect();
+    SoundEffect();
+    virtual ~SoundEffect();
 
-	//methods 
-	void Serialize(std::ostream& _stream) override;
-	void Deserialize(std::istream& _stream) override;
-	void ToString() override;
-	void AssignNonDefaultValues() override;
+    Asset* GetData() { return m_effect; }
 
-	//Members 
-	static ObjectPool<SoundEffect>* Pool;
+    void Serialize(std::ostream& _stream) override;
+    void Deserialize(std::istream& _stream) override;
+    void ToString() override;
+    void Load(string _guid); 
+
+    static ObjectPool<SoundEffect>* Pool;
 
 private:
-	Asset* m_effect;
-
+    Asset* m_effect;
 };
 
-#endif //	SOUND_EFFECT_H
+#endif

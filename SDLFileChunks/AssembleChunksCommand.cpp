@@ -2,7 +2,9 @@
 #include <fstream>
 #include <cstdio> 
 #include <iostream>
-
+#include "Asset.h"
+#include "ObjectPool.h"
+#include "Resource.h"
 AssembleChunksCommand::AssembleChunksCommand(Level* level, const std::string& outFile)
 	:m_level(level), m_outFile(outFile) { }
 

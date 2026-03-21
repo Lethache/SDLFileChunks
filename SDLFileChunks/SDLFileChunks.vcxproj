@@ -105,13 +105,13 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)External\SDL3-3.4.0\include;$(SolutionDir)External\SDL3_ttf-3.2.2\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)External\SDL3-3.4.0\include;$(SolutionDir)External\SDL3_ttf-3.2.2\include;%(AdditionalIncludeDirectories);$(SolutionDir)External\SDL3_ttf-3.2.2\include;$(SolutionDir)External\SDL3_mixer\include;$(SolutionDir)External\SDL3-3.4.0\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)External\SDL3-3.4.0\lib\x64;$(SolutionDir)External\SDL3_ttf-3.2.2\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>SDL3.lib;SDL3_ttf.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)External\SDL3-3.4.0\lib\x64;$(SolutionDir)External\SDL3_ttf-3.2.2\lib\x64;%(AdditionalLibraryDirectories);$(SolutionDir)External\SDL3_ttf-3.2.2\lib;$(SolutionDir)External\SDL3_mixer\lib;$(SolutionDir)External\SDL3-3.4.0\lib;$(SolutionDir)External\SDL3_mixer\lib\x64</AdditionalLibraryDirectories>
+      <AdditionalDependencies>SDL3.lib;SDL3_ttf.lib;%(AdditionalDependencies);SDL3_mixer.lib</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>copy /Y "$(SolutionDir)External\SDL3-3.4.0\lib\x64\SDL3.dll" "$(TargetDir)"
@@ -132,16 +132,20 @@ copy /Y "$(SolutionDir)External\SDL3_ttf-3.2.2\lib\x64\SDL3_ttf.dll" "$(TargetDi
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
+      <AdditionalIncludeDirectories>;$(SolutionDir)External\SDL3_ttf-3.2.2\include;$(SolutionDir)External\SDL3_mixer\include;$(SolutionDir)External\SDL3-3.4.0\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>;$(SolutionDir)External\SDL3_ttf-3.2.2\lib;$(SolutionDir)External\SDL3_mixer\lib;$(SolutionDir)External\SDL3-3.4.0\lib;$(SolutionDir)External\SDL3_mixer\lib\x64</AdditionalLibraryDirectories>
+      <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies);SDL3_mixer.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AssembleChunksCommand.cpp" />
     <ClCompile Include="Asset.cpp" />
     <ClCompile Include="AssetController.cpp" />
+    <ClCompile Include="AudioController.cpp" />
     <ClCompile Include="CommandManager.cpp" />
     <ClCompile Include="FileChunk.cpp" />
     <ClCompile Include="FileController.cpp" />
@@ -158,6 +162,7 @@ copy /Y "$(SolutionDir)External\SDL3_ttf-3.2.2\lib\x64\SDL3_ttf.dll" "$(TargetDi
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="RenderTarget.cpp" />
     <ClCompile Include="Resource.cpp" />
+    <ClCompile Include="Song.cpp" />
     <ClCompile Include="SoundEffect.cpp" />
     <ClCompile Include="SpriteAnim.cpp" />
     <ClCompile Include="SpriteSheet.cpp" />
@@ -172,6 +177,7 @@ copy /Y "$(SolutionDir)External\SDL3_ttf-3.2.2\lib\x64\SDL3_ttf.dll" "$(TargetDi
     <ClInclude Include="AssembleChunksCommand.h" />
     <ClInclude Include="Asset.h" />
     <ClInclude Include="AssetController.h" />
+    <ClInclude Include="AudioController.h" />
     <ClInclude Include="Command.h" />
     <ClInclude Include="CommandManager.h" />
     <ClInclude Include="FileChunk.h" />
@@ -191,6 +197,7 @@ copy /Y "$(SolutionDir)External\SDL3_ttf-3.2.2\lib\x64\SDL3_ttf.dll" "$(TargetDi
     <ClInclude Include="Resource.h" />
     <ClInclude Include="Serializable.h" />
     <ClInclude Include="Singleton.h" />
+    <ClInclude Include="Song.h" />
     <ClInclude Include="SoundEffect.h" />
     <ClInclude Include="SpriteAnim.h" />
     <ClInclude Include="SpriteSheet.h" />

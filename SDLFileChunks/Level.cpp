@@ -1,7 +1,9 @@
 #include "Level.h"
 #include "FileChunk.h"
 #include "AssetController.h"
-
+#include "Asset.h"
+#include "ObjectPool.h"
+#include "Resource.h"
 
 Level::Level()
 {
