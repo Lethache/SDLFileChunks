@@ -172,6 +172,7 @@ copy /Y "$(SolutionDir)External\SDL3_ttf-3.2.2\lib\x64\SDL3_ttf.dll" "$(TargetDi
     <ClCompile Include="Timing.cpp" />
     <ClCompile Include="TTFont.cpp" />
     <ClCompile Include="Unit.cpp" />
+    <ClCompile Include="WavDraw.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AssembleChunksCommand.h" />
@@ -208,6 +209,7 @@ copy /Y "$(SolutionDir)External\SDL3_ttf-3.2.2\lib\x64\SDL3_ttf.dll" "$(TargetDi
     <ClInclude Include="Timing.h" />
     <ClInclude Include="TTFont.h" />
     <ClInclude Include="Unit.h" />
+    <ClInclude Include="WavDraw.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

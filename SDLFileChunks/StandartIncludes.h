@@ -2,11 +2,9 @@
 #define STANDARD_INCLUDES_H
 
 #define SDL_MAIN_HANDLED
-
 #define NATIVE_XRES 1920
 #define NATIVE_YRES 1080
 
-// Include standard headers
 #include <string>
 #include <vector>
 #include <iostream>
@@ -15,16 +13,16 @@
 #include <stdio.h>
 #include <thread>
 #include <map>
+#include <algorithm>
 #include <sstream>
 
 #include <SDL3/SDL.h>
 #include <SDL3_ttf/SDL_ttf.h>
 #include <SDL3/SDL_gamepad.h>
 #include <SDL3/SDL_mixer.h>
-// Project headers
+
 #include "Singleton.h"
 
-// OS specific includes and defines
 #ifdef _WIN32
 #include <Windows.h>
 #include <direct.h>
@@ -37,5 +35,8 @@
 #endif
 
 using namespace std;
+
+
+typedef SDL_Point Point;
 
 #endif // STANDARD_INCLUDES_H
