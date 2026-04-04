@@ -2,101 +2,94 @@
 #include "Renderer.h"
 #include "TTFont.h"
 #include "InputController.h"
-#include "Keyboard.h"      
-#include "Mouse.h"         
-#include "Gamepad.h"      
-#include "AudioController.h"
-#include "SoundEffect.h"
-#include "Song.h"
-#include "WAVDraw.h"
+#include "Keyboard.h"
+#include "Mouse.h"
+#include "Timing.h"
+#include "PhysicsController.h"
 #include "AssetController.h"
-#include "Asset.h"
 
-GameController::GameController() : m_quit(false), m_zoomY(1.0f)
-{
+GameController::GameController() {
+    m_sdlEvent = { };
     m_renderer = nullptr;
-    m_fArial20 = nullptr;
+    m_Arial20 = nullptr;
     m_input = nullptr;
-    m_audio = nullptr;
-    m_effect = nullptr;
-    m_song = nullptr;
-    m_wavDraw = nullptr;
+    m_quit = false;
+    m_timing = nullptr;
+    m_physics = nullptr;
 }
 
-GameController::~GameController() { ShutDown(); }
+GameController::~GameController() {
+    ShutDown();
+}
 
-void GameController::Initialize()
-{
+void GameController::Initialize() {
+    
     AssetController::Instance().Initialize(10000000);
+
     m_renderer = &Renderer::Instance();
     m_renderer->Initialize();
 
     m_input = &InputController::Instance();
     m_input->Initialize(m_renderer->GetWindow());
 
-    m_fArial20 = new TTFont();
-    m_fArial20->Initialize(20);
+    m_Arial20 = new TTFont();
+    m_Arial20->Initialize(20);
 
-    m_audio = &AudioController::Instance();
-    m_wavDraw = new WAVDraw();
-
-    m_effect = m_audio->LoadEffect("../Assets/Audio/Effects/Whoosh.wav");
-    m_song = m_audio->LoadSong("../Assets/Audio/Music/Track1.mp3");
+    m_timing = &Timing::Instance();
+    m_physics = &PhysicsController::Instance();
 }
 
-void GameController::ShutDown()
-{
-    if (m_fArial20) { delete m_fArial20; m_fArial20 = nullptr; }
-    if (m_wavDraw) { delete m_wavDraw; m_wavDraw = nullptr; }
-}
-
-void GameController::HandleInput(SDL_Event _event)
-{
+void GameController::HandleInput(SDL_Event _event) {
     m_input->Process();
 
-    
-    if (_event.type == SDL_EVENT_QUIT || m_input->KB()->KeyUp(_event, SDLK_ESCAPE))
+    string temp;
+    if (m_sdlEvent.type == SDL_EVENT_QUIT ||
+        (m_input->KB()->KeyUp(m_sdlEvent, SDLK_ESCAPE)))
     {
         m_quit = true;
     }
-
-   
-    if (m_input->KB()->KeyUp(_event, SDLK_P)) m_audio->Play(m_effect);
-
-   
-    if (m_input->KB()->KeyUp(_event, SDLK_A)) m_zoomY += 0.2f;
-    if (m_input->KB()->KeyUp(_event, SDLK_S)) m_zoomY -= 0.2f;
+    else if (m_input->KB()->GetKeyStates()[SDL_SCANCODE_A])
+    {
+        m_physics->AddParticle(glm::vec2{ 300 + rand() % 400, 200 }, 3 + rand() % 5);
+    }
 }
 
-void GameController::RunGame()
-{
+void GameController::RunGame() {
     Initialize();
+
     while (!m_quit)
     {
-        m_renderer->SetDrawColor({ 255, 255, 255, 255 });
+        m_timing->Tick();
+
+        
+        m_renderer->SetDrawColor(SDL_Color{ 255, 255, 255, 255 });
         m_renderer->ClearScreen();
 
-        while (SDL_PollEvent(&m_sdlEvent)) { HandleInput(m_sdlEvent); }
-
-        
-        if (m_effect) m_wavDraw->DrawWave(m_effect->GetData(), m_renderer, m_zoomY);
-
-        
-        if (m_audio->GetMusic())
+        while (SDL_PollEvent(&m_sdlEvent))
         {
-            string musInfo = "Music: " + m_audio->GetMusicTitle() + " [" + m_audio->MusicPosition() + "/" + m_audio->GetMusicLength() + "]";
-            m_fArial20->Write(m_renderer->GetRenderer(), musInfo.c_str(), { 0, 0, 255 }, { 50, 50 });
+            HandleInput(m_sdlEvent);
+        }
+
+        m_physics->Update(m_timing->GetDeltaTime());
+
+        
+        for (Particle* p : m_physics->GetParticles())
+        {
+            m_renderer->SetDrawColor(SDL_Color{ 0, 0, 255, 255 });
+            m_renderer->RenderFillRectangle(SDL_FRect{ p->GetPosition().x, p->GetPosition().y, 5.0f, 5.0f });
         }
 
         
-        int count = 0;
-        for (auto const& e : m_audio->GetEffects())
-        {
-            string effInfo = "Effect " + to_string(count) + ": " + e->m_name;
-            m_fArial20->Write(m_renderer->GetRenderer(), effInfo.c_str(), { 255, 0, 0 }, { 50, 100 + count * 30 });
-            count++;
-        }
+        m_Arial20->Write(m_renderer->GetRenderer(), ("FPS: " + to_string(m_timing->GetFPS())).c_str(),
+            SDL_Color{ 0, 0, 255, 255 }, SDL_Point{ 10, 10 });
+
+        m_Arial20->Write(m_renderer->GetRenderer(), m_physics->ToString().c_str(),
+            SDL_Color{ 0, 0, 255, 255 }, SDL_Point{ 120, 10 });
 
         SDL_RenderPresent(m_renderer->GetRenderer());
     }
+
+}
+void GameController::ShutDown() {
+
 }

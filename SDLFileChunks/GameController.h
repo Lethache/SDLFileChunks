@@ -6,33 +6,31 @@
 class Renderer;
 class TTFont;
 class InputController;
-class AudioController;
-class SoundEffect;
-class Song;
-class WAVDraw;
+class Timing;
+class PhysicsController;
 
 class GameController : public Singleton<GameController>
 {
 public:
+    // Constructors/Destructors
     GameController();
     virtual ~GameController();
 
+    // Methods
     void RunGame();
     void Initialize();
     void HandleInput(SDL_Event _event);
     void ShutDown();
 
 private:
+    // Members
     SDL_Event m_sdlEvent;
     Renderer* m_renderer;
-    TTFont* m_fArial20;
+    TTFont* m_Arial20;
     bool m_quit;
     InputController* m_input;
-    AudioController* m_audio;
-    SoundEffect* m_effect;
-    Song* m_song;
-    WAVDraw* m_wavDraw;
-    float m_zoomY;
+    Timing* m_timing;
+    PhysicsController* m_physics;
 };
 
-#endif
+#endif // GAME_CONTROLLER_H

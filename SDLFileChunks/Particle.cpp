@@ -19,3 +19,8 @@ void Particle::Update(float _deltaTime, glm::vec2 _force)
         SetDead(true);
     }
 }
+void Particle::Reset() {
+    m_currentTime = 0.0f;
+    m_lifeTime = 0.0f;
+    SetDead(false);
+}

@@ -20,7 +20,7 @@
 #include <SDL3_ttf/SDL_ttf.h>
 #include <SDL3/SDL_gamepad.h>
 #include <SDL3/SDL_mixer.h>
-
+#include <glm/glm.hpp>
 #include "Singleton.h"
 
 #ifdef _WIN32
