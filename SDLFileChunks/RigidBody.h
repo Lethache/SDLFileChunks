@@ -24,8 +24,6 @@ public:
 
     // Methods
     virtual void Update(float _deltaTime, glm::vec2 _force);
-
-    
     virtual void Reset();
 
 private:

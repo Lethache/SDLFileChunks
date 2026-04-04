@@ -16,8 +16,6 @@ public:
     // Accessors
     float GetGravity() { return m_gravity; }
     void SetGravity(float _gravity) { m_gravity = _gravity; }
-
-    
     vector<Particle*>& GetParticles() { return m_particles; }
 
     // Methods
@@ -26,11 +24,9 @@ public:
     string ToString();
 
 private:
-    
+    // Members
     float m_gravity;
     glm::vec2 m_force;
-
-   
     vector<Particle*> m_particles;
 };
 

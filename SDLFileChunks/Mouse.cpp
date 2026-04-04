@@ -1,13 +1,11 @@
 #include "Mouse.h"
 
-Mouse::Mouse()
-{
-    m_x = 0;
-    m_y = 0;
-    m_buttonStates = 0;
+void Mouse::Process() {
+   
 }
 
-void Mouse::Process()
-{
-    m_buttonStates = SDL_GetMouseState(&m_x, &m_y);
+void Mouse::ProcessButtons(SDL_Event _event) {
+    if (_event.type == SDL_EVENT_MOUSE_BUTTON_DOWN || _event.type == SDL_EVENT_MOUSE_BUTTON_UP) {
+      
+    }
 }

@@ -2,10 +2,8 @@
 
 RigidBody::RigidBody()
 {
-    
     Reset();
 }
-
 
 void RigidBody::Reset()
 {
